@@ -264,7 +264,7 @@ class _HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      isEditing ? 'Keep contact details accurate.' : 'Create a contact that syncs instantly.',
+      isEditing ? 'Keep contact details accurate.' : 'Create new Contact',
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
     );
   }
