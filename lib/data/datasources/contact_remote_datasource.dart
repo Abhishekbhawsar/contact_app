@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../core/constants/app_constants.dart';
+import '../../core/constants/app_strings.dart';
 import '../models/contact_model.dart';
 
 class ContactRemoteDataSource {
@@ -10,7 +10,7 @@ class ContactRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   CollectionReference<Map<String, dynamic>> get _contacts =>
-      _firestore.collection(AppConstants.contactsCollection);
+      _firestore.collection(AppStrings.contactsCollection);
 
   Stream<List<ContactModel>> watchContacts() {
     return _contacts.orderBy('name').snapshots().map(

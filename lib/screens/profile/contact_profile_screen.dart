@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/services/call_service.dart';
 import '../../data/models/contact_model.dart';
 import '../../providers/contact_provider.dart';
@@ -30,24 +31,26 @@ class ContactProfileScreen extends StatelessWidget {
           return const Scaffold(
             body: EmptyState(
               icon: Icons.person_off_outlined,
-              title: 'Contact not found',
-              message: 'This contact may have been deleted.',
+              title: AppStrings.contactNotFound,
+              message: AppStrings.contactNotFoundMessage,
             ),
           );
         }
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Contact details'),
+            title: const Text(AppStrings.contactDetails),
             actions: [
               IconButton(
-                tooltip: contact.isFavorite ? 'Remove from favorites' : 'Add to favorites',
+                tooltip: contact.isFavorite
+                    ? AppStrings.removeFromFavorites
+                    : AppStrings.addToFavorites,
                 icon: Icon(contact.isFavorite ? Icons.star_rounded : Icons.star_outline_rounded),
                 color: contact.isFavorite ? Colors.amber.shade700 : null,
                 onPressed: () => provider.toggleFavorite(contact),
               ),
               IconButton(
-                tooltip: 'Edit contact',
+                tooltip: AppStrings.editContact,
                 icon: const Icon(Icons.edit_outlined),
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => AddEditContactScreen(contact: contact)),
@@ -66,7 +69,9 @@ class ContactProfileScreen extends StatelessWidget {
                       final messenger = ScaffoldMessenger.of(context);
                       final launched = await callService.call(contact.phoneNumber);
                       if (!launched) {
-                        messenger.showSnackBar(const SnackBar(content: Text('Could not start a call.')));
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text(AppStrings.couldNotStartCall)),
+                        );
                       }
                     },
                     onEdit: () => Navigator.of(context).push(
@@ -75,11 +80,11 @@ class ContactProfileScreen extends StatelessWidget {
                     onDelete: () => _confirmDelete(context, provider, contact),
                   ),
                   const SizedBox(height: 24),
-                  _InfoCard(icon: Icons.call_outlined, title: 'Phone', value: contact.phoneNumber),
-                  _InfoCard(icon: Icons.mail_outline_rounded, title: 'Email', value: contact.email),
-                  _InfoCard(icon: Icons.business_outlined, title: 'Company', value: contact.company),
-                  _InfoCard(icon: Icons.place_outlined, title: 'Address', value: contact.address),
-                  _InfoCard(icon: Icons.notes_outlined, title: 'Notes', value: contact.notes),
+                  _InfoCard(icon: Icons.call_outlined, title: AppStrings.phone, value: contact.phoneNumber),
+                  _InfoCard(icon: Icons.mail_outline_rounded, title: AppStrings.email, value: contact.email),
+                  _InfoCard(icon: Icons.business_outlined, title: AppStrings.company, value: contact.company),
+                  _InfoCard(icon: Icons.place_outlined, title: AppStrings.address, value: contact.address),
+                  _InfoCard(icon: Icons.notes_outlined, title: AppStrings.notes, value: contact.notes),
                 ],
               ),
             ),
@@ -96,13 +101,13 @@ class ContactProfileScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         icon: const Icon(Icons.delete_outline_rounded),
-        title: const Text('Delete contact?'),
-        content: Text('This will permanently delete ${contact.name}.'),
+        title: const Text(AppStrings.deleteContactQuestion),
+        content: Text(AppStrings.deleteContactMessage(contact.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text(AppStrings.cancel)),
           FilledButton.tonal(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete'),
+            child: const Text(AppStrings.delete),
           ),
         ],
       ),
@@ -111,10 +116,10 @@ class ContactProfileScreen extends StatelessWidget {
     if (shouldDelete != true) return;
     try {
       await provider.deleteContact(contact.id);
-      messenger.showSnackBar(const SnackBar(content: Text('Contact deleted.')));
+      messenger.showSnackBar(const SnackBar(content: Text(AppStrings.contactDeleted)));
       navigator.pop();
     } catch (_) {
-      messenger.showSnackBar(const SnackBar(content: Text('Could not delete contact.')));
+      messenger.showSnackBar(const SnackBar(content: Text(AppStrings.couldNotDeleteContact)));
     }
   }
 }
@@ -166,9 +171,9 @@ class _ActionRow extends StatelessWidget {
       builder: (context, constraints) {
         final compact = constraints.maxWidth < 430;
         final children = [
-          FilledButton.icon(onPressed: onCall, icon: const Icon(Icons.call_rounded), label: const Text('Call')),
-          OutlinedButton.icon(onPressed: onEdit, icon: const Icon(Icons.edit_outlined), label: const Text('Edit')),
-          TextButton.icon(onPressed: onDelete, icon: const Icon(Icons.delete_outline_rounded), label: const Text('Delete')),
+          FilledButton.icon(onPressed: onCall, icon: const Icon(Icons.call_rounded), label: const Text(AppStrings.call)),
+          OutlinedButton.icon(onPressed: onEdit, icon: const Icon(Icons.edit_outlined), label: const Text(AppStrings.edit)),
+          TextButton.icon(onPressed: onDelete, icon: const Icon(Icons.delete_outline_rounded), label: const Text(AppStrings.delete)),
         ];
 
         if (compact) {

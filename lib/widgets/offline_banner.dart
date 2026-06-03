@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/constants/app_strings.dart';
+
 class OfflineBanner extends StatelessWidget {
   const OfflineBanner({super.key});
 
@@ -8,28 +10,35 @@ class OfflineBanner extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return Semantics(
       liveRegion: true,
-      label: 'Your internet is off. Contacts cannot sync right now.',
-      child: Material(
-        color: colorScheme.errorContainer,
-        child: SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Row(
-              children: [
-                Icon(Icons.wifi_off_rounded, color: colorScheme.onErrorContainer),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Your internet is off. Please connect to Wi-Fi or mobile data to sync contacts.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onErrorContainer,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                ),
-              ],
-            ),
+      label: AppStrings.offlineSemanticMessage,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.wifi_off_rounded,
+                size: 80,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                AppStrings.yourInternetIsOff,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                AppStrings.offlineScreenMessage,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
           ),
         ),
       ),

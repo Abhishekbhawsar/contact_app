@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/utils/validators.dart';
 import '../../data/models/contact_model.dart';
 import '../../providers/contact_provider.dart';
@@ -56,15 +57,15 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isOffline = context.select<InternetProvider, bool>((value) => value.isOffline);
     return Scaffold(
-      appBar: AppBar(title: Text(_isEditing ? 'Edit contact' : 'Add contact')),
+      appBar: AppBar(
+        title: Text(_isEditing ? AppStrings.editContact : AppStrings.addContact),
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            if (context.select<InternetProvider, bool>((value) => value.isOffline))
-              const OfflineBanner(),
-            Expanded(
-              child: ResponsivePage(
+        child: isOffline
+            ? const OfflineBanner()
+            : ResponsivePage(
                 child: Form(
                   key: _formKey,
                   child: ListView(
@@ -73,7 +74,7 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
                       const SizedBox(height: 24),
                       _field(
                         controller: _nameController,
-                        label: 'Full name',
+                        label: AppStrings.fullName,
                         icon: Icons.person_outline_rounded,
                         validator: Validators.requiredName,
                         textInputAction: TextInputAction.next,
@@ -81,7 +82,7 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
                       const SizedBox(height: 14),
                       _field(
                         controller: _phoneController,
-                        label: 'Phone number',
+                        label: AppStrings.phoneNumber,
                         icon: Icons.call_outlined,
                         validator: Validators.phone,
                         keyboardType: TextInputType.phone,
@@ -90,7 +91,7 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
                       const SizedBox(height: 14),
                       _field(
                         controller: _emailController,
-                        label: 'Email address',
+                        label: AppStrings.emailAddress,
                         icon: Icons.mail_outline_rounded,
                         validator: Validators.email,
                         keyboardType: TextInputType.emailAddress,
@@ -99,28 +100,28 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
                       const SizedBox(height: 14),
                       _field(
                         controller: _companyController,
-                        label: 'Company',
+                        label: AppStrings.company,
                         icon: Icons.business_outlined,
                       ),
                       const SizedBox(height: 14),
                       _field(
                         controller: _addressController,
-                        label: 'Address',
+                        label: AppStrings.address,
                         icon: Icons.place_outlined,
                         minLines: 2,
                       ),
                       const SizedBox(height: 14),
                       _field(
                         controller: _notesController,
-                        label: 'Notes',
+                        label: AppStrings.notes,
                         icon: Icons.notes_outlined,
                         minLines: 3,
                       ),
                       const SizedBox(height: 8),
                       SwitchListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: const Text('Favorite'),
-                        subtitle: const Text('Show this contact on the Favorites tab'),
+                        title: const Text(AppStrings.favorite),
+                        subtitle: const Text(AppStrings.favoriteSubtitle),
                         secondary: Icon(_isFavorite ? Icons.star_rounded : Icons.star_outline_rounded),
                         value: _isFavorite,
                         onChanged: (value) => setState(() => _isFavorite = value),
@@ -134,15 +135,14 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Icon(Icons.save_outlined),
-                        label: Text(_isEditing ? 'Save changes' : 'Create contact'),
+                        label: Text(
+                          _isEditing ? AppStrings.saveChanges : AppStrings.createContact,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -176,7 +176,7 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
     if (context.read<InternetProvider>().isOffline) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Your internet is off. Please connect to the internet and try again.'),
+          content: Text(AppStrings.offlineSnackbarMessage),
         ),
       );
       return;
@@ -208,13 +208,15 @@ class _AddEditContactScreenState extends State<AddEditContactScreen> {
         await provider.addContact(contact);
       }
       messenger.showSnackBar(
-        SnackBar(content: Text(_isEditing ? 'Contact updated.' : 'Contact added.')),
+        SnackBar(
+          content: Text(_isEditing ? AppStrings.contactUpdated : AppStrings.contactAdded),
+        ),
       );
       navigator.pop();
     } catch (error) {
       final message = error.toString().contains('timed out')
-          ? 'Save timed out. Check Firebase setup and internet.'
-          : 'Could not save contact. Check Firebase setup.';
+          ? AppStrings.saveTimedOut
+          : AppStrings.couldNotSaveContact;
       messenger.showSnackBar(SnackBar(content: Text(message)));
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -264,7 +266,7 @@ class _HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      isEditing ? 'Keep contact details accurate.' : 'Create new Contact',
+      isEditing ? AppStrings.editContactHeader : AppStrings.addContactHeader,
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
     );
   }

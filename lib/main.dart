@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'core/constants/app_constants.dart';
+import 'core/constants/app_strings.dart';
 import 'core/theme/app_theme.dart';
 import 'data/datasources/contact_remote_datasource.dart';
 import 'data/repositories/contact_repository.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = MaterialApp(
-      title: AppConstants.appName,
+      title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
@@ -78,7 +78,7 @@ class FirebaseSetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.appName)),
+      appBar: AppBar(title: const Text(AppStrings.appName)),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Center(
@@ -94,7 +94,7 @@ class FirebaseSetupScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Firebase is not configured',
+                  AppStrings.firebaseNotConfiguredTitle,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -103,7 +103,7 @@ class FirebaseSetupScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Run flutterfire configure, select your Firebase project, then restart the app.',
+                  AppStrings.firebaseNotConfiguredMessage,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),

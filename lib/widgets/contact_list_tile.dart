@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/constants/app_strings.dart';
 import '../core/services/call_service.dart';
 import '../data/models/contact_model.dart';
 import 'contact_avatar.dart';
@@ -24,7 +25,7 @@ class ContactListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Open ${contact.name}',
+      label: AppStrings.openContactLabel(contact.name),
       child: Card(
         child: ListTile(
           onTap: onTap,
@@ -45,19 +46,23 @@ class ContactListTile extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                tooltip: contact.isFavorite ? 'Remove from favorites' : 'Add to favorites',
+                tooltip: contact.isFavorite
+                    ? AppStrings.removeFromFavorites
+                    : AppStrings.addToFavorites,
                 icon: Icon(contact.isFavorite ? Icons.star_rounded : Icons.star_outline_rounded),
                 color: contact.isFavorite ? Colors.amber.shade700 : null,
                 onPressed: onToggleFavorite,
               ),
               IconButton(
-                tooltip: 'Call ${contact.name}',
+                tooltip: AppStrings.callContactLabel(contact.name),
                 icon: const Icon(Icons.call_outlined),
                 onPressed: () async {
                   final messenger = ScaffoldMessenger.of(context);
                   final launched = await callService.call(contact.phoneNumber);
                   if (!launched) {
-                    messenger.showSnackBar(const SnackBar(content: Text('Could not start a call.')));
+                    messenger.showSnackBar(
+                      const SnackBar(content: Text(AppStrings.couldNotStartCall)),
+                    );
                   }
                 },
               ),

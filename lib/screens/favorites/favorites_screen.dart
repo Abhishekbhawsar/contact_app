@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../providers/contact_provider.dart';
 import '../../widgets/contact_list_tile.dart';
 import '../../widgets/empty_state.dart';
@@ -21,8 +22,8 @@ class FavoritesScreen extends StatelessWidget {
             child: favorites.isEmpty
                 ? const EmptyState(
                     icon: Icons.star_outline_rounded,
-                    title: 'No favorites yet',
-                    message: 'Star important people to keep them close at hand.',
+                    title: AppStrings.noFavoritesYet,
+                    message: AppStrings.noFavoritesMessage,
                   )
                 : ListView.separated(
                     itemCount: favorites.length,

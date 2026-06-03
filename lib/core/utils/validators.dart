@@ -1,18 +1,20 @@
+import '../constants/app_strings.dart';
+
 class Validators {
   const Validators._();
 
   static String? requiredName(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Full name is required';
+      return AppStrings.nameRequired;
     }
     return null;
   }
 
   static String? phone(String? value) {
     final input = value?.trim() ?? '';
-    if (input.isEmpty) return 'Phone number is required';
+    if (input.isEmpty) return AppStrings.phoneRequired;
     final phoneRegex = RegExp(r'^\+?[0-9\s().-]{7,20}$');
-    if (!phoneRegex.hasMatch(input)) return 'Enter a valid phone number';
+    if (!phoneRegex.hasMatch(input)) return AppStrings.validPhoneRequired;
     return null;
   }
 
@@ -20,7 +22,7 @@ class Validators {
     final input = value?.trim() ?? '';
     if (input.isEmpty) return null;
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-    if (!emailRegex.hasMatch(input)) return 'Enter a valid email address';
+    if (!emailRegex.hasMatch(input)) return AppStrings.validEmailRequired;
     return null;
   }
 }

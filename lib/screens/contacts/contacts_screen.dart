@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../data/models/contact_model.dart';
 import '../../providers/contact_provider.dart';
 import '../../widgets/contact_list_tile.dart';
@@ -21,7 +22,7 @@ class ContactsScreen extends StatelessWidget {
         if (provider.errorMessage != null && provider.allContacts.isEmpty) {
           return EmptyState(
             icon: Icons.cloud_off_outlined,
-            title: 'Unable to load contacts',
+            title: AppStrings.unableToLoadContacts,
             message: provider.errorMessage!,
           );
         }
@@ -33,10 +34,12 @@ class ContactsScreen extends StatelessWidget {
                 ? EmptyState(
                     key: ValueKey(provider.searchQuery),
                     icon: provider.searchQuery.isEmpty ? Icons.person_add_alt_1_outlined : Icons.search_off_rounded,
-                    title: provider.searchQuery.isEmpty ? 'No contacts yet' : 'No matching contacts',
+                    title: provider.searchQuery.isEmpty
+                        ? AppStrings.noContactsYet
+                        : AppStrings.noMatchingContacts,
                     message: provider.searchQuery.isEmpty
-                        ? 'Add a contact to see it here in real time.'
-                        : 'Try searching by name, phone, email, or company.',
+                        ? AppStrings.addContactEmptyMessage
+                        : AppStrings.searchEmptyMessage,
                   )
                 : _ContactList(contacts: provider.contacts),
           ),

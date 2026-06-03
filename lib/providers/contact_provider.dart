@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../core/constants/app_strings.dart';
 import '../data/models/contact_model.dart';
 import '../data/repositories/contact_repository.dart';
 
@@ -72,7 +73,7 @@ class ContactProvider extends ChangeNotifier {
       await action().timeout(
         const Duration(seconds: 15),
         onTimeout: () {
-          throw TimeoutException('Firestore request timed out. Check Firebase setup and internet connection.');
+          throw TimeoutException(AppStrings.firestoreTimeout);
         },
       );
     } catch (error) {

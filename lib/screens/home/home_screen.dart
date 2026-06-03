@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../providers/contact_provider.dart';
 import '../../providers/internet_provider.dart';
 import '../../widgets/offline_banner.dart';
@@ -31,14 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final isOffline = context.select<InternetProvider, bool>((value) => value.isOffline);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contacts'),
+        title: const Text(AppStrings.appName),
         actions: [
           IconButton(
-            tooltip: 'Refresh contacts',
+            tooltip: AppStrings.refreshContacts,
             icon: const Icon(Icons.refresh_rounded),
-            onPressed: isOffline
-                ? () => _showOfflineMessage(context)
-                : provider.fetchContacts,
+            onPressed: isOffline ? null : provider.fetchContacts,
           ),
         ],
         bottom: PreferredSize(
@@ -46,15 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
             child: Semantics(
-              label: 'Search contacts',
+              label: AppStrings.searchContacts,
               child: SearchBar(
                 controller: _searchController,
-                hintText: 'Search contacts',
+                hintText: AppStrings.searchContacts,
                 leading: const Icon(Icons.search_rounded),
                 trailing: [
                   if (_searchController.text.isNotEmpty)
                     IconButton(
-                      tooltip: 'Clear search',
+                      tooltip: AppStrings.clearSearch,
                       icon: const Icon(Icons.close_rounded),
                       onPressed: () {
                         _searchController.clear();
@@ -72,23 +71,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          if (isOffline) const OfflineBanner(),
-          Expanded(
-            child: IndexedStack(
+      body: isOffline
+          ? const OfflineBanner()
+          : IndexedStack(
               index: _index,
               children: const [ContactsScreen(), FavoritesScreen()],
             ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton.extended(
-        tooltip: 'Add contact',
+        tooltip: AppStrings.addContactTooltip,
         icon: const Icon(Icons.person_add_alt_1_rounded),
-        label: const Text('Add'),
+        label: const Text(AppStrings.add),
         onPressed: isOffline
-            ? () => _showOfflineMessage(context)
+            ? null
             : () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const AddEditContactScreen()),
                 ),
@@ -97,17 +91,17 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: _index,
         onDestinationSelected: (value) => setState(() => _index = value),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.people_outline_rounded), selectedIcon: Icon(Icons.people_rounded), label: 'Contacts'),
-          NavigationDestination(icon: Icon(Icons.star_outline_rounded), selectedIcon: Icon(Icons.star_rounded), label: 'Favorites'),
+          NavigationDestination(
+            icon: Icon(Icons.people_outline_rounded),
+            selectedIcon: Icon(Icons.people_rounded),
+            label: AppStrings.appName,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.star_outline_rounded),
+            selectedIcon: Icon(Icons.star_rounded),
+            label: AppStrings.favorites,
+          ),
         ],
-      ),
-    );
-  }
-
-  void _showOfflineMessage(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Your internet is off. Please connect to the internet and try again.'),
       ),
     );
   }

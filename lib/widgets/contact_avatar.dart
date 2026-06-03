@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/constants/app_strings.dart';
 import '../data/models/contact_model.dart';
 
 class ContactAvatar extends StatelessWidget {
@@ -19,7 +20,7 @@ class ContactAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final avatar = Semantics(
-      label: '${contact.name} avatar',
+      label: AppStrings.avatarLabel(contact.name),
       image: true,
       child: CircleAvatar(
         radius: size / 2,
